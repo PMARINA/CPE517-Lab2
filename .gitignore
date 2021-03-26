@@ -1,0 +1,18 @@
+*
+/**/
+
+# Paths
+!.gitignore
+!Makefile
+!README.md
+!.pre-commit-config.yaml
+
+# Folders
+!src/
+!*.c
+!*.h
+!docs/
+!*.pdf
+!*.docx
+!*.txt
+!*.asm
