@@ -15,3 +15,9 @@ repos:
     rev: master
     hooks:
     -   id: clang-format
+-   repo: https://github.com/executablebooks/mdformat
+    rev: 0.6.1
+    hooks:
+    -   id: mdformat
+    additional_dependencies:
+    - mdformat-tables
