@@ -6,8 +6,8 @@
 
 ### Lab Materials
 
-- ** Professor ** [Hang Liu](mailto: Hang.Liu@stevens.edu)
-- ** TA ** [Mingju He](mailto: mhe6@stevens.edu)
+- **Professor** [Hang Liu](mailto:Hang.Liu@stevens.edu)
+- **TA** [Mingju He](mailto:mhe6@stevens.edu)
 
 ### Students completing this lab
 
