@@ -47,7 +47,7 @@ void decode() {
       // misclassified as I type
       rs = (instruction >> 21) & 0x1f;  // 0-31
       rt = (instruction >> 16) & 0x1f;
-      itemp = instruction & 0xffff;
+      itemp = instruction & (uint32_t)(0xffff);
     }
     func = op;
   }
