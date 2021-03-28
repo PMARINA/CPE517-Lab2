@@ -67,7 +67,8 @@ void execute_addi() {
 
 void execute_addiu() {
   printf("addiu\n");
-  NEXT_STATE.REGS[rt] = CURRENT_STATE.REGS[rs] + ((uint32_t)(itemp));
+  NEXT_STATE.REGS[rt] =
+      ((uint32_t)(CURRENT_STATE.REGS[rs])) + ((uint32_t)(itemp));
 }
 
 void execute_bgtz() {
