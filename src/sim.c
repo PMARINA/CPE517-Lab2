@@ -67,12 +67,7 @@ void execute_addi() {
 
 void execute_addiu() {
   printf("addiu\n");
-  if (itemp > 32767) {   // 2^15-1=32767 is the largest number
-    itemp = ~itemp + 1;  // 2's complement
-    NEXT_STATE.REGS[rt] = (uint32_t)(CURRENT_STATE.REGS[rs]) - itemp;
-  } else {
-    NEXT_STATE.REGS[rt] = (uint32_t)(CURRENT_STATE.REGS[rs]) + itemp;
-  }
+  NEXT_STATE.REGS[rt] = CURRENT_STATE.REGS[rs] + ((uint32_t)(itemp));
 }
 
 void execute_bgtz() {
