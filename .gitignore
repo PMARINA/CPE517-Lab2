@@ -14,5 +14,9 @@
 !docs/
 !*.pdf
 !*.docx
+!test/
+!i-type/
+!j-type/
+!r-type/
 !*.txt
 !*.asm

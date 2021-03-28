@@ -31,14 +31,17 @@ void decode() {
   // if op==0, it is R type
   // if I type, there is no funct, so set func based off of opcode
   if (op == 0) {  // R type instructions
-    rs = (instruction >> 21) & 0x1f;
-    rt = (instruction >> 16) & 0x1f;
-    rd = (instruction >> 11) & 0x1f;
     func = instruction & 0x3f;
+    if (func != 8) {
+      // if jr, this part is unnecessary.
+      rs = (instruction >> 21) & 0x1f;
+      rt = (instruction >> 16) & 0x1f;
+      rd = (instruction >> 11) & 0x1f;
+    }
   } else {                     // if i != 0, I-type, J-type
     if (op == 2 || op == 3) {  // J-type
       // The op is a Jump or JAL operation
-      rs = instruction & 0x3ffffff;
+      // Nothing to do if it's a jump
     } else {
       // Any jump instructions not supported (all besides J, JAL) will be
       // misclassified as I type
@@ -74,10 +77,17 @@ void execute_addiu() {
 
 void execute_bgtz() {
   printf("bgtz\n");
-  // NEXT_STATE.REGS[PC] =
-  //     0;
-  // TODO: Figure out where the operand containing the address and
-  // containing the conditional variable is stored.
+  if (CURRENT_STATE.REGS[rs] > 0) {
+    uint32_t addr = mem_read_32(CURRENT_STATE.PC) + (itemp + 1) * 4;
+    mem_write_32(NEXT_STATE.PC, addr);
+  }
+}
+
+void execute_lb() {
+  printf("lb\n");
+  uint32_t addr = CURRENT_STATE.REGS[rs];
+  NEXT_STATE.REGS[rt] = (CURRENT_STATE.REGS[rt] & (0xffffff00)) |
+                        (mem_read_32(addr + itemp) & 0xff);
 }
 
 void execute_lw() {
@@ -86,10 +96,43 @@ void execute_lw() {
   NEXT_STATE.REGS[rt] = mem_read_32(addr + itemp);
 }
 
+void execute_sb() {
+  printf("sb\n");
+  uint32_t addr = CURRENT_STATE.REGS[rs];
+  // 32 bit registers
+  // replace last 8 bits
+  // read in first 24 bits from memory (chopping off the rest)
+  uint32_t temp_existing = mem_read_32(addr + itemp) & 0xffffff00;
+  // AND value in register with ff will chop off the most signficant 24 bits
+  // (keeping only the last 8) ORRing the two will keep the first bits from
+  // memory and drop in new bits from register
+  mem_write_32(addr + itemp, (CURRENT_STATE.REGS[rt] & 0xff) | temp_existing);
+}
+
 void execute_sw() {
   printf("sw\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
   mem_write_32(addr + itemp, CURRENT_STATE.REGS[rt]);
+}
+
+void execute_jump() {
+  printf("jump\n");
+  uint32_t addr = ((instruction & 0x3ffffff) << 2);
+  addr = addr | (mem_read_32(CURRENT_STATE.PC) & (0xf << 7));
+  mem_write_32(NEXT_STATE.PC, addr);
+}
+
+void execute_jal() {
+  printf("jal\n");
+  uint32_t addr = ((instruction & 0x3ffffff) << 2);
+  addr += mem_read_32(CURRENT_STATE.PC) & (0xf << 7);
+  mem_write_32(NEXT_STATE.PC, addr);
+  NEXT_STATE.REGS[31] = mem_read_32(CURRENT_STATE.PC) + 8;
+}
+
+void execute_jr() {
+  printf("jr");
+  mem_write_32(NEXT_STATE.PC, CURRENT_STATE.REGS[31]);
 }
 
 void execute() {
@@ -97,6 +140,10 @@ void execute() {
   if (op == 0) {  // R type instruction
     printf("R-type\t");
     switch (func) {
+      case 8:
+        // JR = 8 == return
+        execute_jr();
+        break;
       case 32:  // add:100000
         // ADD = 32
         printf("add\n");
@@ -125,7 +172,6 @@ void execute() {
         printf("and\n");
         NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] & CURRENT_STATE.REGS[rt];
         break;
-
       case 12:                              // system call:001100
         if (CURRENT_STATE.REGS[2] == 10) {  // v0==10 then exit
           printf("systemcall: exit\n");
@@ -143,8 +189,16 @@ void execute() {
     if (op == 2 || op == 3) {
       printf("J-type\t");
       // Execute Jumps
-      // J = 2
-      // JAL = 3
+      switch (op) {
+        case 2:
+          // J = 2
+          execute_jump();
+          break;
+        case 3:
+          // JAL = 3 (BONUS)
+          execute_jal();
+          break;
+      }
     } else {
       printf("I-type\t");
       // Execute I-type
@@ -161,14 +215,22 @@ void execute() {
           // ADDIU = 9
           execute_addiu();
           break;
+        case 32:
+          // LB = 32 (BONUS)
+          execute_lb();
+          break;
         case 35:
           // LW = 35
           execute_lw();
           break;
+        case 40:
+          // SB = 40 (BONUS)
+          execute_sb();
+          break;
         case 43:
+          // SW = 43
           execute_sw();
           break;
-          // SW = 43
       }
     }
   }
