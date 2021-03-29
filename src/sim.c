@@ -75,6 +75,7 @@ void execute_bgtz() {
   printf("bgtz\n");
   if (CURRENT_STATE.REGS[rs] > 0) {
     uint32_t addr = mem_read_32(CURRENT_STATE.PC) + (itemp + 1) * 4;
+    printf("itemp was %d", itemp);
     mem_write_32(NEXT_STATE.PC, addr);
   }
 }
