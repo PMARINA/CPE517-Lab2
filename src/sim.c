@@ -74,7 +74,7 @@ void execute_addiu() {
 void execute_bgtz() {
   printf("bgtz\n");
   if (CURRENT_STATE.REGS[rs] > 0) {
-    uint32_t addr = CURRENT_STATE.PC + (itemp)*4;
+    uint32_t addr = CURRENT_STATE.PC + (itemp + 1) * 4;
     printf("itemp was %d", itemp);
     NEXT_STATE.PC = addr;
     // mem_write_32(CURRENT_STATE.PC, addr - 4);
