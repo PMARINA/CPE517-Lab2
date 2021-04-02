@@ -32,12 +32,9 @@ void decode() {
   // if I type, there is no funct, so set func based off of opcode
   if (op == 0) {  // R type instructions
     func = instruction & 0x3f;
-    if (func != 8) {
-      // if jr, this part is unnecessary.
-      rs = (instruction >> 21) & 0x1f;
-      rt = (instruction >> 16) & 0x1f;
-      rd = (instruction >> 11) & 0x1f;
-    }
+    rs = (instruction >> 21) & 0x1f;
+    rt = (instruction >> 16) & 0x1f;
+    rd = (instruction >> 11) & 0x1f;
   } else {                     // if i != 0, I-type, J-type
     if (op == 2 || op == 3) {  // J-type
       // The op is a Jump or JAL operation
