@@ -63,7 +63,7 @@ def mips_compile(input_file: str, output_file: str) -> bool:
             shell=True,  # Apparently it's important
             capture_output=True,
         )
-        if result.stdout.lower.contains("error"):
+        if result.stdout.decode("utf-8").lower().contains("error"):
             print(result.stdout)
             return False
         return True
