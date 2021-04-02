@@ -3,8 +3,10 @@
 import os
 import shutil
 import subprocess
+import tempfile
 from typing import Generator
 
+import magic  # libmagic
 from loguru import logger
 
 TEST_DIRECTORY = os.path.abspath("test/")
@@ -33,7 +35,7 @@ def paths_to_compile(
 
 
 def setup_output(out: str = OUTPUT_DIRECTORY) -> None:
-    """Empty the output directory. Create it if it doesn't exist.
+    """Empty the output directory. Create it if it doesn'temp_output exist.
 
     Args:
         out (str, optional): The filepath to the directory. Defaults to OUTPUT_DIRECTORY.
@@ -64,11 +66,45 @@ def mips_compile(input_file: str, output_file: str) -> bool:
         return False
 
 
+def fix_encoding(input_path: str) -> None:
+    """Ensure encoding of input is utf-8.
+
+    Note that this only modifies files if they are not in utf-8 format.
+
+    Args:
+        input_path (str): The path to the file to fix
+    """
+    blob = open(input_path, "rb").read()
+    magic_inst = magic.open(magic.MAGIC_MIME_ENCODING)
+    magic_inst.load()
+    encoding = magic_inst.buffer(blob)
+    if encoding.strip().lower() != "utf-8":
+        with tempfile.TemporaryFile() as temp_output:
+            with open(input_path, "rb") as input_file:
+                temp_output.write(input_file.read().decode(encoding)).encode("utf-8")
+            temp_output.seek(0)
+            with open(input_path, "wb") as output_file:
+                output_file.write(temp_output.read())
+
+
+def ensure_output_dir(filepath: str) -> None:
+    """Ensure output directory exists for writing to.
+
+    Args:
+        filepath (str): The path to the file to be created.
+    """
+    outdir = os.path.join(*(os.path.split(filepath)[:-1]))
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
+
+
 def main():
     """Compile all assembly files in test directory."""
     setup_output()
     for input_path in paths_to_compile():
         path_relative_test = os.path.relpath(input_path, start=TEST_DIRECTORY)
+        fix_encoding(input_path)
+
         if COMPILE_FILETYPE and OUTPUT_FILETYPE:
             output_file = os.path.join(
                 OUTPUT_DIRECTORY,
@@ -80,6 +116,8 @@ def main():
             )
         else:
             output_file = os.path.join(OUTPUT_DIRECTORY, path_relative_test)
+
+        ensure_output_dir(output_file)
         if mips_compile(input_path, output_file):
             logger.success(path_relative_test)
         else:
