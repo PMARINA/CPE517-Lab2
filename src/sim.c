@@ -138,7 +138,9 @@ void execute_lui() {
   //        __ ___ = 0                                RS
   //              _ ____ = 1                          RT
   //                     ____ ____ ____ ____ = 4097   IMM (itemp)
-
+  printf("lui\n");
+  printf("rt is %d\n", rt);
+  printf("itemp is %04x\n", itemp);
   NEXT_STATE.REGS[rt] = itemp << 16;
 }
 
