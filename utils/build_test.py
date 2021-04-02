@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Compile tests for easy testing."""
+import codecs
 import os
 import shutil
 import subprocess
@@ -56,11 +57,15 @@ def mips_compile(input_file: str, output_file: str) -> bool:
         bool: Whether or not the file compiled successfully
     """
     try:
-        subprocess.run(
+        result = subprocess.run(
             f"java -jar utils/Mars4_5.jar a {input_file} dump .text HexText {output_file}",
             check=True,  # If the process ends with error code, raise an exception.
             shell=True,  # Apparently it's important
+            capture_output=True,
         )
+        if result.stdout.lower.contains("error"):
+            print(result.stdout)
+            return False
         return True
     except subprocess.CalledProcessError:
         return False
@@ -84,7 +89,10 @@ def fix_encoding(input_path: str) -> None:
                 temp_output.write(input_file.read().decode(encoding).encode("utf-8"))
             temp_output.seek(0)
             with open(input_path, "wb") as output_file:
-                output_file.write(temp_output.read())
+                content = temp_output.read()
+                if content.startswith(codecs.BOM_UTF8):
+                    content = content[len(codecs.BOM_UTF8)]
+                output_file.write(content)
 
 
 def ensure_output_dir(filepath: str) -> None:
