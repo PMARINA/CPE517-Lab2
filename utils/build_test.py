@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 from typing import Generator
 
-import magic  # libmagic
+import magic  # python-magic
 from loguru import logger
 
 TEST_DIRECTORY = os.path.abspath("test/")
@@ -81,7 +81,7 @@ def fix_encoding(input_path: str) -> None:
     if encoding.strip().lower() != "utf-8":
         with tempfile.TemporaryFile() as temp_output:
             with open(input_path, "rb") as input_file:
-                temp_output.write(input_file.read().decode(encoding)).encode("utf-8")
+                temp_output.write(input_file.read().decode(encoding).encode("utf-8"))
             temp_output.seek(0)
             with open(input_path, "wb") as output_file:
                 output_file.write(temp_output.read())
