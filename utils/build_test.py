@@ -57,6 +57,7 @@ def mips_compile(input_file: str, output_file: str) -> bool:
         subprocess.run(
             f"java -jar utils/Mars4_5.jar a {input_file} dump .text HexText {output_file}",
             check=True,  # If the process ends with error code, raise an exception.
+            shell=True,  # Apparently it's important
         )
         return True
     except subprocess.CalledProcessError:
