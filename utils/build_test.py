@@ -64,7 +64,7 @@ def mips_compile(input_file: str, output_file: str) -> bool:
             capture_output=True,
         )
         if "error" in result.stdout.decode("utf-8").lower():
-            print(result.stdout)
+            print(result.stdout.decode("utf-8"))
             return False
         return True
     except subprocess.CalledProcessError:
@@ -90,11 +90,12 @@ def fix_encoding(input_path: str) -> None:
             temp_output.seek(0)
             with open(input_path, "wb") as output_file:
                 content = temp_output.read()
-                i = 0
-                while content[i] != b"." and content[i] != ".":
-                    i += 1
-                # if content.startswith(codecs.BOM_UTF8):
-                content = content[i:]
+                # i = 0
+                # while content[i] != b"." and content[i] != ".":
+                #    i += 1
+                if content.startswith(codecs.BOM_UTF8):
+                    content = content[len(codecs.BOM_UTF8) :]
+                # content = content[i:]
                 output_file.write(content)
 
 
