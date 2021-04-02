@@ -128,7 +128,7 @@ void execute_jal() {
 
 void execute_jr() {
   printf("jr");
-  mem_write_32(NEXT_STATE.PC, CURRENT_STATE.REGS[31]);
+  mem_write_32(NEXT_STATE.PC, CURRENT_STATE.REGS[rs]);
 }
 
 void execute() {
