@@ -118,14 +118,14 @@ void execute_jump() {
   printf("jump\n");
   uint32_t addr = ((instruction & 0x3ffffff) << 2);
   addr = addr | (mem_read_32(CURRENT_STATE.PC) & (0xf << 28));
-  mem_write_32(NEXT_STATE.PC, addr);
+  NEXT_STATE.PC = addr;
 }
 
 void execute_jal() {
   printf("jal\n");
   uint32_t addr = ((instruction & 0x3ffffff) << 2);
-  addr += mem_read_32(CURRENT_STATE.PC) & (0xf << 7);
-  mem_write_32(NEXT_STATE.PC, addr);
+  addr += CURRENT_STATE.PC & (0xf << 28);
+  NEXT_STATE.PC = addr;
   NEXT_STATE.REGS[31] = mem_read_32(CURRENT_STATE.PC) + 8;
 }
 
