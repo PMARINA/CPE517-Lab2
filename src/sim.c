@@ -131,6 +131,17 @@ void execute_jr() {
   mem_write_32(NEXT_STATE.PC, CURRENT_STATE.REGS[rs]);
 }
 
+void execute_lui() {
+  // 3c 01 10 01
+  // 0011 1100 0000 0001 0001 0000 0000 0001
+  // ____ __ = 1111 = 15                              OPCODE
+  //        __ ___ = 0                                RS
+  //              _ ____ = 1                          RT
+  //                     ____ ____ ____ ____ = 4097   IMM (itemp)
+
+  NEXT_STATE.REGS[rt] = itemp << 16;
+}
+
 void execute() {
   printf("\nexecute\t");
   if (op == 0) {  // R type instruction
@@ -210,6 +221,10 @@ void execute() {
         case 9:
           // ADDIU = 9
           execute_addiu();
+          break;
+        case 15:
+          // LUI = 15
+          execute_lui();
           break;
         case 32:
           // LB = 32 (BONUS)
