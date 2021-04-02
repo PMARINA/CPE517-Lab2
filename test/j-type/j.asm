@@ -1,10 +1,6 @@
-.data
-len: .word 4
-wid: .word 5
-
 .text
-lw		$t0, len
-lw		$t1, wid
+addi	$t0, $zero, 4
+addi	$t1, $zero, 5
 j		perimeter
 addi	$a0, $zero, 0
 addi	$v0, $zero, 1	#returning integer
