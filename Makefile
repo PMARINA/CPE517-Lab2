@@ -5,6 +5,9 @@ build/sim: src/shell.c src/sim.c
 run: build/sim
 	build/sim 'add(i).txt'
 
+buildtest: utils/Mars4_5.jar utils/build_test.py
+	python3 utils/build_test.py
+
 .PHONY: clean
 
 clean:
