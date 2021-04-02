@@ -126,7 +126,7 @@ void execute_jal() {
   uint32_t addr = ((instruction & 0x3ffffff) << 2);
   addr += CURRENT_STATE.PC & (0xf << 28);
   NEXT_STATE.PC = addr;
-  NEXT_STATE.REGS[31] = mem_read_32(CURRENT_STATE.PC) + 8;
+  NEXT_STATE.REGS[31] = CURRENT_STATE.PC + 8;
 }
 
 void execute_jr() {
