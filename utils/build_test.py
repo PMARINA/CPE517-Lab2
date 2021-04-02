@@ -91,7 +91,7 @@ def fix_encoding(input_path: str) -> None:
             with open(input_path, "wb") as output_file:
                 content = temp_output.read()
                 if content.startswith(codecs.BOM_UTF8):
-                    content = content[len(codecs.BOM_UTF8)]
+                    content = content[len(codecs.BOM_UTF8) :]
                 output_file.write(content)
 
 
