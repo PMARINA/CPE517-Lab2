@@ -130,7 +130,10 @@ void execute_jal() {
 }
 
 void execute_jr() {
-  printf("jr");
+  printf("jr\n");
+  printf("rt: %d", rt);
+  printf("rs: %d", rs);
+  printf("rd: %d", rd);
   NEXT_STATE.PC = CURRENT_STATE.REGS[rs];
 }
 
