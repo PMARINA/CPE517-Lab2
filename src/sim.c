@@ -86,10 +86,7 @@ void execute_lb() {
 void execute_lw() {
   printf("lw\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
-  printf("Register to read from: %d\n", rs);
-  printf("Addr to read from: %d\n", addr);
   NEXT_STATE.REGS[rt] = mem_read_32(addr + itemp);
-  printf("Memory contained %08x", NEXT_STATE.REGS[rt]);
 }
 
 void execute_sb() {
@@ -128,9 +125,6 @@ void execute_jal() {
 
 void execute_jr() {
   printf("jr\n");
-  printf("rt: %d", rt);
-  printf("rs: %d", rs);
-  printf("rd: %d", rd);
   NEXT_STATE.PC = CURRENT_STATE.REGS[rs];
 }
 
