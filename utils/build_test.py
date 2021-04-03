@@ -140,7 +140,8 @@ def main():
             else:
                 logger.error(path_relative_test)
         else:
-            logger.success(f"{path_relative_test} -- cached")
+            # logger.success(f"{path_relative_test} -- cached")
+            pass
 
 
 if __name__ == "__main__":

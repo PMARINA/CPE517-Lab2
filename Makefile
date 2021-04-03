@@ -1,3 +1,5 @@
+all: build/sim buildtest
+
 build/sim: src/shell.c src/sim.c
 	mkdir -p build
 	gcc -g -O2 $^ -o $@
