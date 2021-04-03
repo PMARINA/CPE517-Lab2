@@ -17,10 +17,17 @@
 
 ## Instructions to Run
 
+1. Run `make`
+2. Run `build/sim build/test/*/___.txt`
+   - `build/test/*/___.txt` is the test file you wish to run.
+3. Check the `test/*/___.asm` file for comments regarding expected output and evaluation.
+
+Note that `build/test/*/___.txt` is generated based on `test/*/___.asm` when `make` is run.
+
+See [this repository's github.io page](https://pmarina.github.io/CPE517-Lab2/) for more info about how the instructions were implemented.
+
 ## Instructions to Contribute
 
 1. `git clone ...`
-
-1. `pip install --upgrade pre-commit`
-
-1. `pre-commit install`
+2. `pip install --upgrade pre-commit`
+3. `pre-commit install`
