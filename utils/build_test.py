@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 from typing import Generator
 
-import magic  # python-magic
+import magic  # python-magic. I think I was using libmagic before? It's hard to keep track.
 from loguru import logger
 
 TEST_DIRECTORY = os.path.abspath("test/")
@@ -82,9 +82,18 @@ def fix_encoding(input_path: str) -> None:
         input_path (str): The path to the file to fix
     """
     blob = open(input_path, "rb").read()
-    magic_inst = magic.open(magic.MAGIC_MIME_ENCODING)
-    magic_inst.load()
-    encoding = magic_inst.buffer(blob)
+    encoding: str
+    try:
+        magic_inst = magic.open(magic.MAGIC_MIME_ENCODING)
+        magic_inst.load()
+        encoding = magic_inst.buffer(blob)
+    except AttributeError:
+        """
+        This is because there are multiple libraries named `magic` (who would have guessed...). 
+        Let this be a reminder to you to properly name your libraries in future.
+        """
+        m = magic.Magic(mime_encoding=True)
+        encoding = m.from_buffer(blob)
     if encoding.strip().lower() != "utf-8":
         with tempfile.TemporaryFile() as temp_output:
             with open(input_path, "rb") as input_file:

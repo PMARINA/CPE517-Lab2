@@ -254,9 +254,14 @@ void execute() {
         printf("systemcall: exit\n");
         RUN_BIT = FALSE;
       }
-      if (CURRENT_STATE.REGS[2] == 1) {      // v0==1: print int
+      else if (CURRENT_STATE.REGS[2] == 1) {      // v0==1: print int
         int32_t val = CURRENT_STATE.REGS[4]; // a0 is 4th register
         printf("\n print the number:   %d \n ", val);
+      }
+      else if(CURRENT_STATE.REGS[2] == 34){
+        printf("\n print the number: %x \n", CURRENT_STATE.REGS[4]);
+      } else {
+        printf("\n syscall with unsupported parameter %d \n", CURRENT_STATE.REGS[2]);
       }
       break;
     default:

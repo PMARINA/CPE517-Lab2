@@ -39,3 +39,15 @@ See [this repository's github.io page](https://pmarina.github.io/CPE517-Lab2/) f
 1. `git clone ...`
 2. `pip install --upgrade pre-commit`
 3. `pre-commit install`
+
+## Fully Tested Instructions
+
+### I-Type
+
+- `BGTZ` = Branch if Greater than Zero
+  - [test 1](test/i-type/bgtz.asm)
+  - [test 2](test/i-type/bgtz2.asm)
+- `LB` = Load Byte
+  - See `SB`
+- `SB` = Store Byte
+  - [test](test/i-type/lbsb.asm)

@@ -1,29 +1,40 @@
 .text
-addi $t0, $zero, 0xab
-lui $t0, 0xce00
-sw $t0, 0x10010000
-addi $t0, $zero, 0
-lw $t0, 0x10010000
-addi $t0, $t0, 1
-sw $t0, 0x10010000
-addi $a0, $zero, 0
-lw $a0, 0x10010000
-addi $v0, $zero, 1
-syscall
+# Test 1 -- no special things. Just write and read to the same place. 
+printsetup:
+	addi $v0, $zero, 34 # Print int in hex
+addrsetup1:
+	lui $t5, 0x1001
+setup1:
+	lui $t0, 0xABCD
+	addi $t0, $t0, 0x1234
+	sw $t0, 0($t5)
+test1:
+	addi $a0, $a0, 0
+	lw $a0, 0($t5)
+	syscall
+	
+# Test 2 -- read and write with positive offset.
+addrsetup2:
+	lui $t5, 0x1001
+	addi $t5, $t5, 0x0008
+setup2:
+	lui $t0, 0xABCD
+	addi $t0, $t0, 0x1234
+	sw $t0, 8($t5)
+test2:
+	addi $a0, $a0, 0
+	lw $a0, 8($t5)
+	syscall
 
-addi $t0, $zero, 0xab
-lui $t0, 0x4e00
-sw $t0, 0x10010000
-addi $t0, $zero, 0
-lw $t0, 0x10010000
-addi $t0, $t0, 1
-sw $t0, 0x10010000
-addi $a0, $zero, 0
-lw $a0, 0x10010000
-addi $v0, $zero, 1
-syscall
-
-addi $v0, $zero, 10
-syscall
-
-# This is a copy of lbsb with w instead of b...
+# Test 3 -- read and write with positive offset.
+addrsetup3:
+	lui $t5, 0x1001
+	addi $t5, $t5, 0x00024
+setup3:
+	lui $t0, 0xABCD
+	addi $t0, $t0, 0x1234
+	sw $t0, -8($t5)
+test3:
+	addi $a0, $a0, 0
+	lw $a0, -8($t5)
+	syscall
