@@ -91,7 +91,7 @@ void execute_lb() {
   if ((int32_t)(itemp) < 0)
     val = (mem_read_32(addr + (itemp - 3) / 4) & (0xff << ((itemp % 4) * 8)));
   else
-    val = (mem_read_32(addr + itemp / 4) >> ((itemp % 4) * 8) & 0xff);
+    val = (mem_read_32(addr + (itemp / 4) * 4) >> ((itemp % 4) * 8) & 0xff);
   if (val > 127) {
     val = val | 0xffffff00;
   }
@@ -123,8 +123,8 @@ void execute_sb() {
                      temp_existing);
   } else {
     temp_existing =
-        mem_read_32(addr + itemp / 4) & ~(0xff << ((itemp % 4) * 8));
-    mem_write_32(addr + (itemp) / 4,
+        mem_read_32(addr + (itemp / 4) * 4) & ~(0xff << ((itemp % 4) * 8));
+    mem_write_32(addr + ((itemp / 4) * 4),
                  (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4) * 8))) |
                      temp_existing);
   }
