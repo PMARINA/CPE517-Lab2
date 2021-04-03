@@ -81,8 +81,7 @@ void execute_lb() {
   uint32_t addr = CURRENT_STATE.REGS[rs];
   uint32_t val = (mem_read_32(addr + itemp) & 0xff);
   if (val > 127) {
-    val = ~val;
-    val += 1;
+    val = val | 0xffffff00;
   }
   NEXT_STATE.REGS[rt] = (CURRENT_STATE.REGS[rt] & (0xffffff00)) | val;
 }
