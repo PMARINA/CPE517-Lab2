@@ -108,7 +108,10 @@ void execute_sb() {
 void execute_sw() {
   printf("sw\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
-  mem_write_32(addr + itemp, CURRENT_STATE.REGS[rt]);
+  if (itemp > 32767) {
+    itemp = ~itemp + 1;
+  }
+  mem_write_32(addr, CURRENT_STATE.REGS[rt] + itemp);
 }
 
 void execute_jump() {
