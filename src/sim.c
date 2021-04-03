@@ -79,8 +79,11 @@ void execute_bgtz() {
 void execute_lb() {
   printf("lb\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
-  NEXT_STATE.REGS[rt] = (CURRENT_STATE.REGS[rt] & (0xffffff00)) |
-                        (mem_read_32(addr + itemp) & 0xff);
+  uint32_t val = (mem_read_32(addr + itemp) & 0xff);
+  if (val > 127) {
+    val = ~val + 1;
+  }
+  NEXT_STATE.REGS[rt] = (CURRENT_STATE.REGS[rt] & (0xffffff00)) | val;
 }
 
 void execute_lw() {
