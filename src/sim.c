@@ -88,7 +88,7 @@ void execute_lb() {
   if (itemp > 32767) {
     itemp = ~itemp + 1;
   }
-  if (int32_t(itemp) < 0)
+  if ((int32_t)(itemp) < 0)
     val = (mem_read_32(addr + (itemp - 3) / 4) & (0xff << (itemp % 4)));
   else
     val = (mem_read_32(addr + itemp / 4) & (0xff << (itemp % 4)));
@@ -115,7 +115,7 @@ void execute_sb() {
   }
   uint32_t val;
   uint32_t temp_existing;
-  if (int32_t(itemp) < 0) {
+  if ((int32_t)(itemp) < 0) {
     temp_existing =
         mem_read_32(addr + (itemp - 3) / 4) & ~(0xff << (itemp % 4));
     mem_write_32(
