@@ -115,7 +115,6 @@ def main():
     setup_output()
     for input_path in paths_to_compile():
         path_relative_test = os.path.relpath(input_path, start=TEST_DIRECTORY)
-        fix_encoding(input_path)
 
         if COMPILE_FILETYPE and OUTPUT_FILETYPE:
             output_file = os.path.join(
@@ -129,11 +128,15 @@ def main():
         else:
             output_file = os.path.join(OUTPUT_DIRECTORY, path_relative_test)
 
-        ensure_output_dir(output_file)
-        if mips_compile(input_path, output_file):
-            logger.success(path_relative_test)
+        if os.path.getmtime(input_path) > os.path.getmtime(output_file):
+            fix_encoding(input_path)
+            ensure_output_dir(output_file)
+            if mips_compile(input_path, output_file):
+                logger.success(path_relative_test)
+            else:
+                logger.error(path_relative_test)
         else:
-            logger.error(path_relative_test)
+            logger.success(f"{path_relative_test} -- cached")
 
 
 if __name__ == "__main__":
