@@ -87,206 +87,206 @@ void execute_lb() {
   uint32_t val;
   if (itemp > 32767) {
     itemp = ~itemp + 1;
-  }
-  if ((int32_t)(itemp) < 0)
-    val = (mem_read_32(addr + (itemp - 3) / 4) & (0xff << ((itemp % 4) * 8)));
-  else
-    val = (mem_read_32(addr + (itemp / 4) * 4) >> ((itemp % 4) * 8) & 0xff);
-  if (val > 127) {
-    val = val | 0xffffff00;
-  }
-  NEXT_STATE.REGS[rt] = (CURRENT_STATE.REGS[rt] & (0xffffff00)) | val;
-}
-
-void execute_lw() {
-  printf("lw\n");
-  uint32_t addr = CURRENT_STATE.REGS[rs];
-  NEXT_STATE.REGS[rt] = mem_read_32(addr + itemp);
-}
-
-void execute_sb() {
-  printf("sb\n");
-  printf("itemp is %d \n", itemp);
-  uint32_t addr = CURRENT_STATE.REGS[rs];
-  // 32 bit registers
-  // replace last 8 bits
-  // read in first 24 bits from memory (chopping off the rest)
-  uint32_t val;
-  uint32_t temp_existing;
-  if (itemp > 32767) {
-    itemp = ~itemp + 1;
-    printf("itemp is %d \n", itemp);
-    temp_existing = mem_read_32(addr - ((itemp + 3) / 4) * 4) &
-                    ~(0xff << ((itemp % 4 - 1) * 8));
-    mem_write_32(addr - ((itemp + 3) / 4) * 4,
-                 (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4 - 1) * 8))) |
-                     temp_existing);
-  } else {
-    temp_existing =
-        mem_read_32(addr + (itemp / 4) * 4) & ~(0xff << ((itemp % 4) * 8));
-    mem_write_32(addr + ((itemp / 4) * 4),
-                 (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4) * 8))) |
-                     temp_existing);
-  }
-  // AND value in register with ff will chop off the most signficant 24 bits
-  // (keeping only the last 8) ORRing the two will keep the first bits from
-  // memory and drop in new bits from register
-}
-
-void execute_sw() {
-  printf("sw\n");
-  uint32_t addr = CURRENT_STATE.REGS[rs];
-  if (itemp > 32767) {
-    itemp = ~itemp + 1;
-  }
-  mem_write_32(addr, CURRENT_STATE.REGS[rt] + itemp);
-}
-
-void execute_jump() {
-  printf("jump\n");
-  uint32_t addr = ((instruction & 0x3ffffff) << 2);
-  addr = addr | (mem_read_32(CURRENT_STATE.PC) & (0xf << 28));
-  NEXT_STATE.PC = addr;
-}
-
-void execute_jal() {
-  printf("jal\n");
-  uint32_t addr = ((instruction & 0x3ffffff) << 2);
-  addr += CURRENT_STATE.PC & (0xf << 28);
-  NEXT_STATE.PC = addr;
-  NEXT_STATE.REGS[31] = CURRENT_STATE.PC + 4;
-}
-
-void execute_jr() {
-  printf("jr\n");
-  NEXT_STATE.PC = CURRENT_STATE.REGS[rs];
-}
-
-void execute_lui() {
-  // 3c 01 10 01
-  // 0011 1100 0000 0001 0001 0000 0000 0001
-  // ____ __ = 1111 = 15                              OPCODE
-  //        __ ___ = 0                                RS
-  //              _ ____ = 1                          RT
-  //                     ____ ____ ____ ____ = 4097   IMM (itemp)
-  printf("lui\n");
-  printf("rt is %d\n", rt);
-  printf("itemp is %04x\n", itemp);
-  NEXT_STATE.REGS[rt] = itemp << 16;
-}
-
-void execute() {
-  printf("\nexecute\t");
-  if (op == 0) {  // R type instruction
-    printf("R-type\t");
-    switch (func) {
-      case 8:
-        // JR = 8 == return
-        execute_jr();
-        break;
-      case 32:  // add:100000
-        // ADD = 32
-        printf("add\n");
-        //      if(rt>2147483647)
-        NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] + CURRENT_STATE.REGS[rt];
-        break;
-      case 33:
-        // ADDU = 33
-        printf("addu\n");
-        NEXT_STATE.REGS[rd] = (uint32_t)(CURRENT_STATE.REGS[rs]) +
-                              (uint32_t)(CURRENT_STATE.REGS[rt]);
-        break;
-      case 34:
-        // SUB = 34
-        printf("sub\n");
-        NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] - CURRENT_STATE.REGS[rt];
-        break;
-      case 35:
-        // SUBU = 35
-        printf("subu\n");
-        NEXT_STATE.REGS[rd] = (uint32_t)(CURRENT_STATE.REGS[rs]) -
-                              (uint32_t)(CURRENT_STATE.REGS[rt]);
-        break;
-      case 36:
-        // AND = 36
-        printf("and\n");
-        NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] & CURRENT_STATE.REGS[rt];
-        break;
-      case 12:                              // system call:001100
-        if (CURRENT_STATE.REGS[2] == 10) {  // v0==10 then exit
-          printf("systemcall: exit\n");
-          RUN_BIT = FALSE;
-        }
-        if (CURRENT_STATE.REGS[2] == 1) {       // v0==1: print int
-          int32_t val = CURRENT_STATE.REGS[4];  // a0 is 4th register
-          printf("\n print the number:   %d \n ", val);
-        }
-        break;
-      default:
-        break;
+    val = (mem_read_32(addr - ((itemp + 3) / 4) * 4) &
+           (0xff << ((itemp % 4 - 1) * 8)));
+    else val =
+        (mem_read_32(addr + (itemp / 4) * 4) >> ((itemp % 4) * 8) & 0xff);
+    if (val > 127) {
+      val = val | 0xffffff00;
     }
-  } else {
-    if (op == 2 || op == 3) {
-      printf("J-type\t");
-      // Execute Jumps
-      switch (op) {
-        case 2:
-          // J = 2
-          execute_jump();
+    NEXT_STATE.REGS[rt] = (CURRENT_STATE.REGS[rt] & (0xffffff00)) | val;
+  }
+
+  void execute_lw() {
+    printf("lw\n");
+    uint32_t addr = CURRENT_STATE.REGS[rs];
+    NEXT_STATE.REGS[rt] = mem_read_32(addr + itemp);
+  }
+
+  void execute_sb() {
+    printf("sb\n");
+    printf("itemp is %d \n", itemp);
+    uint32_t addr = CURRENT_STATE.REGS[rs];
+    // 32 bit registers
+    // replace last 8 bits
+    // read in first 24 bits from memory (chopping off the rest)
+    uint32_t val;
+    uint32_t temp_existing;
+    if (itemp > 32767) {
+      itemp = ~itemp + 1;
+      printf("itemp is %d \n", itemp);
+      temp_existing = mem_read_32(addr - ((itemp + 3) / 4) * 4) &
+                      ~(0xff << ((itemp % 4 - 1) * 8));
+      mem_write_32(
+          addr - ((itemp + 3) / 4) * 4,
+          (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4 - 1) * 8))) |
+              temp_existing);
+    } else {
+      temp_existing =
+          mem_read_32(addr + (itemp / 4) * 4) & ~(0xff << ((itemp % 4) * 8));
+      mem_write_32(addr + ((itemp / 4) * 4),
+                   (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4) * 8))) |
+                       temp_existing);
+    }
+    // AND value in register with ff will chop off the most signficant 24 bits
+    // (keeping only the last 8) ORRing the two will keep the first bits from
+    // memory and drop in new bits from register
+  }
+
+  void execute_sw() {
+    printf("sw\n");
+    uint32_t addr = CURRENT_STATE.REGS[rs];
+    if (itemp > 32767) {
+      itemp = ~itemp + 1;
+    }
+    mem_write_32(addr, CURRENT_STATE.REGS[rt] + itemp);
+  }
+
+  void execute_jump() {
+    printf("jump\n");
+    uint32_t addr = ((instruction & 0x3ffffff) << 2);
+    addr = addr | (mem_read_32(CURRENT_STATE.PC) & (0xf << 28));
+    NEXT_STATE.PC = addr;
+  }
+
+  void execute_jal() {
+    printf("jal\n");
+    uint32_t addr = ((instruction & 0x3ffffff) << 2);
+    addr += CURRENT_STATE.PC & (0xf << 28);
+    NEXT_STATE.PC = addr;
+    NEXT_STATE.REGS[31] = CURRENT_STATE.PC + 4;
+  }
+
+  void execute_jr() {
+    printf("jr\n");
+    NEXT_STATE.PC = CURRENT_STATE.REGS[rs];
+  }
+
+  void execute_lui() {
+    // 3c 01 10 01
+    // 0011 1100 0000 0001 0001 0000 0000 0001
+    // ____ __ = 1111 = 15                              OPCODE
+    //        __ ___ = 0                                RS
+    //              _ ____ = 1                          RT
+    //                     ____ ____ ____ ____ = 4097   IMM (itemp)
+    printf("lui\n");
+    printf("rt is %d\n", rt);
+    printf("itemp is %04x\n", itemp);
+    NEXT_STATE.REGS[rt] = itemp << 16;
+  }
+
+  void execute() {
+    printf("\nexecute\t");
+    if (op == 0) {  // R type instruction
+      printf("R-type\t");
+      switch (func) {
+        case 8:
+          // JR = 8 == return
+          execute_jr();
           break;
-        case 3:
-          // JAL = 3 (BONUS)
-          execute_jal();
+        case 32:  // add:100000
+          // ADD = 32
+          printf("add\n");
+          //      if(rt>2147483647)
+          NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] + CURRENT_STATE.REGS[rt];
+          break;
+        case 33:
+          // ADDU = 33
+          printf("addu\n");
+          NEXT_STATE.REGS[rd] = (uint32_t)(CURRENT_STATE.REGS[rs]) +
+                                (uint32_t)(CURRENT_STATE.REGS[rt]);
+          break;
+        case 34:
+          // SUB = 34
+          printf("sub\n");
+          NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] - CURRENT_STATE.REGS[rt];
+          break;
+        case 35:
+          // SUBU = 35
+          printf("subu\n");
+          NEXT_STATE.REGS[rd] = (uint32_t)(CURRENT_STATE.REGS[rs]) -
+                                (uint32_t)(CURRENT_STATE.REGS[rt]);
+          break;
+        case 36:
+          // AND = 36
+          printf("and\n");
+          NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] & CURRENT_STATE.REGS[rt];
+          break;
+        case 12:                              // system call:001100
+          if (CURRENT_STATE.REGS[2] == 10) {  // v0==10 then exit
+            printf("systemcall: exit\n");
+            RUN_BIT = FALSE;
+          }
+          if (CURRENT_STATE.REGS[2] == 1) {       // v0==1: print int
+            int32_t val = CURRENT_STATE.REGS[4];  // a0 is 4th register
+            printf("\n print the number:   %d \n ", val);
+          }
+          break;
+        default:
           break;
       }
     } else {
-      printf("I-type\t");
-      // Execute I-type
-      switch (op) {
-        case 7:
-          // BGTZ = 7
-          execute_bgtz();
-          break;
-        case 8:
-          // ADDI = 8
-          execute_addi();
-          break;
-        case 9:
-          // ADDIU = 9
-          execute_addiu();
-          break;
-        case 15:
-          // LUI = 15
-          execute_lui();
-          break;
-        case 32:
-          // LB = 32 (BONUS)
-          execute_lb();
-          break;
-        case 35:
-          // LW = 35
-          execute_lw();
-          break;
-        case 40:
-          // SB = 40 (BONUS)
-          execute_sb();
-          break;
-        case 43:
-          // SW = 43
-          execute_sw();
-          break;
+      if (op == 2 || op == 3) {
+        printf("J-type\t");
+        // Execute Jumps
+        switch (op) {
+          case 2:
+            // J = 2
+            execute_jump();
+            break;
+          case 3:
+            // JAL = 3 (BONUS)
+            execute_jal();
+            break;
+        }
+      } else {
+        printf("I-type\t");
+        // Execute I-type
+        switch (op) {
+          case 7:
+            // BGTZ = 7
+            execute_bgtz();
+            break;
+          case 8:
+            // ADDI = 8
+            execute_addi();
+            break;
+          case 9:
+            // ADDIU = 9
+            execute_addiu();
+            break;
+          case 15:
+            // LUI = 15
+            execute_lui();
+            break;
+          case 32:
+            // LB = 32 (BONUS)
+            execute_lb();
+            break;
+          case 35:
+            // LW = 35
+            execute_lw();
+            break;
+          case 40:
+            // SB = 40 (BONUS)
+            execute_sb();
+            break;
+          case 43:
+            // SW = 43
+            execute_sw();
+            break;
+        }
       }
     }
   }
-}
-void process_instruction() {
-  /*
-   * execute one instruction here. You should use CURRENT_STATE and modify
-   * values in NEXT_STATE. You can call mem_read_32() and mem_write_32() to
-   * access memory.
-   * */
-  fetch();
-  if (RUN_BIT == 0) return;
-  decode();
-  execute();
-}
+  void process_instruction() {
+    /*
+     * execute one instruction here. You should use CURRENT_STATE and modify
+     * values in NEXT_STATE. You can call mem_read_32() and mem_write_32() to
+     * access memory.
+     * */
+    fetch();
+    if (RUN_BIT == 0) return;
+    decode();
+    execute();
+  }
