@@ -14,6 +14,10 @@ compute:
 	add		$a0, $t0, $t2
 	syscall
 
+	
+addi	$v0, $zero, 10
+syscall
+
 # Expected outputs:
 # 5
 # 0

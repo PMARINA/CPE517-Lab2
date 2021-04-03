@@ -1,4 +1,6 @@
-// Julia Chung, Pridhvi Myneni
+// Group: Julia Chung, Pridhvi Myneni
+// Lab Assignment #2
+
 #include <assert.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -82,7 +84,14 @@ void execute_bgtz() {
 void execute_lb() {
   printf("lb\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
-  uint32_t val = (mem_read_32(addr + itemp) & 0xff);
+  uint32_t val;
+  if (itemp > 32767) {
+    itemp = ~itemp + 1;
+  }
+  if (int32_t(itemp) < 0)
+    val = (mem_read_32(addr + (itemp - 3) / 4) & (0xff << (itemp % 4)));
+  else
+    val = (mem_read_32(addr + itemp / 4) & (0xff << (itemp % 4)));
   if (val > 127) {
     val = val | 0xffffff00;
   }
@@ -101,11 +110,26 @@ void execute_sb() {
   // 32 bit registers
   // replace last 8 bits
   // read in first 24 bits from memory (chopping off the rest)
-  uint32_t temp_existing = mem_read_32(addr + itemp) & 0xffffff00;
+  if (itemp > 32767) {
+    itemp = ~itemp + 1;
+  }
+  uint32_t val;
+  uint32_t temp_existing;
+  if (int32_t(itemp) < 0) {
+    temp_existing =
+        mem_read_32(addr + (itemp - 3) / 4) & ~(0xff << (itemp % 4));
+    mem_write_32(
+        addr + (itemp - 3) / 4,
+        (CURRENT_STATE.REGS[rt] & (0xff << (itemp % 4))) | temp_existing);
+  } else {
+    temp_existing = mem_read_32(addr + itemp / 4) & ~(0xff << (itemp % 4));
+    mem_write_32(
+        addr + itemp / 4,
+        (CURRENT_STATE.REGS[rt] & (0xff << (itemp % 4))) | temp_existing);
+  }
   // AND value in register with ff will chop off the most signficant 24 bits
   // (keeping only the last 8) ORRing the two will keep the first bits from
   // memory and drop in new bits from register
-  mem_write_32(addr + itemp, (CURRENT_STATE.REGS[rt] & 0xff) | temp_existing);
 }
 
 void execute_sw() {

@@ -4,7 +4,7 @@ addi $t0, $zero, 0xfa
 sb $t0, 0x10010000
 add $t0, $zero, $zero
 
-lb $t0, 0x10010000
+lb $t0, 0x10010001
 addi $t0, $t0, 1
 sb $t0, 0x10010000
 addi $a0, $zero, 0
