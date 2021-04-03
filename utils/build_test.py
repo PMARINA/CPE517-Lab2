@@ -128,7 +128,9 @@ def main():
         else:
             output_file = os.path.join(OUTPUT_DIRECTORY, path_relative_test)
 
-        if os.path.getmtime(input_path) > os.path.getmtime(output_file):
+        if not os.path.exists(output_file) or (
+            os.path.getmtime(input_path) < os.path.getmtime(output_file)
+        ):
             fix_encoding(input_path)
             ensure_output_dir(output_file)
             if mips_compile(input_path, output_file):
