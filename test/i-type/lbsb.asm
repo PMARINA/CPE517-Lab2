@@ -2,7 +2,7 @@
 
 addi $t0, $zero, 0xfa
 lui $t1, 0x1001
-sb $t0, 1($t1)
+sb $t0, -1($t1)
 add $t0, $zero, $zero
 
 lb $t0, 1($t1)
