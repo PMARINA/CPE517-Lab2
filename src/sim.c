@@ -21,6 +21,9 @@ uint16_t itemp;  // for save immidiate number
 void fetch() {
   printf("fetch ");
   instruction = mem_read_32(CURRENT_STATE.PC);  // the instruction
+  if (instruction == 0) {
+    RUN_BIT = 0;
+  }
   NEXT_STATE.PC = CURRENT_STATE.PC + 4;
 }
 
@@ -258,6 +261,7 @@ void process_instruction() {
    * access memory.
    * */
   fetch();
+  if (RUN_BIT == 0) return;
   decode();
   execute();
 }
