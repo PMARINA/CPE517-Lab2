@@ -119,15 +119,15 @@ void execute_sb() {
   if ((int32_t)(itemp) < 0) {
     temp_existing =
         mem_read_32(addr + (itemp - 3) / 4) & ~(0xff << ((itemp % 4) * 8));
-    mem_write_32(
-        addr + (itemp - 3) / 4,
-        (CURRENT_STATE.REGS[rt] & (0xff << ((itemp % 4) * 8))) | temp_existing);
+    mem_write_32(addr + (itemp - 3) / 4,
+                 (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4) * 8))) |
+                     temp_existing);
   } else {
     temp_existing =
         mem_read_32(addr + itemp / 4) & ~(0xff << ((itemp % 4) * 8));
-    mem_write_32(
-        addr + itemp / 4,
-        (CURRENT_STATE.REGS[rt] & (0xff << ((itemp % 4) * 8))) | temp_existing);
+    mem_write_32(addr + (itemp) / 4,
+                 (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4) * 8))) |
+                     temp_existing);
   }
   // AND value in register with ff will chop off the most signficant 24 bits
   // (keeping only the last 8) ORRing the two will keep the first bits from
