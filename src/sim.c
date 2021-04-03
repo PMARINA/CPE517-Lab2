@@ -84,9 +84,10 @@ void execute_bgtz() {
     // i type, opcode = 7
     // jump back imm * 4
     // jump forward (imm + 1) * 4
+    // and with 0xffff because itemp is only 16 bits
     uint32_t addr;
     if (itemp > 32767) {
-      addr = CURRENT_STATE.PC - (~itemp + 1) * 4;
+      addr = CURRENT_STATE.PC - ((~itemp + 1) & 0xffff) * 4;
     } else {
       addr = CURRENT_STATE.PC + (itemp + 1) * 4;
     }
