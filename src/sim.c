@@ -83,7 +83,6 @@ void execute_bgtz() {
 
 void execute_lb() {
   printf("lb\n");
-  printf("itemp is %d \n", itemp);
   uint32_t addr = CURRENT_STATE.REGS[rs];
   uint32_t val;
   if (itemp > 32767) {
@@ -107,6 +106,7 @@ void execute_lw() {
 
 void execute_sb() {
   printf("sb\n");
+  printf("itemp is %d \n", itemp);
   uint32_t addr = CURRENT_STATE.REGS[rs];
   // 32 bit registers
   // replace last 8 bits
