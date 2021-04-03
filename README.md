@@ -23,7 +23,7 @@
 
 Change to `pip` if `pip3` not installed and `pip` corresponds to `python3`.
 
-### Compile
+### Compile & Run
 
 1. Run `make`
 2. Run `build/sim build/test/*/___.txt`
