@@ -131,7 +131,7 @@ def main():
             output_file = os.path.join(OUTPUT_DIRECTORY, path_relative_test)
 
         if not os.path.exists(output_file) or (
-            os.path.getmtime(input_path) < os.path.getmtime(output_file)
+            os.path.getmtime(input_path) > os.path.getmtime(output_file)
         ):
             fix_encoding(input_path)
             ensure_output_dir(output_file)
