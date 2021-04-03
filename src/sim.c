@@ -89,9 +89,9 @@ void execute_lb() {
     itemp = ~itemp + 1;
   }
   if ((int32_t)(itemp) < 0)
-    val = (mem_read_32(addr + (itemp - 3) / 4) & (0xff << (itemp % 4)));
+    val = (mem_read_32(addr + (itemp - 31) / 32) & (0xff << (itemp % 32)));
   else
-    val = (mem_read_32(addr + itemp / 4) & (0xff << (itemp % 4)));
+    val = (mem_read_32(addr + itemp / 32) & (0xff << (itemp % 32)));
   if (val > 127) {
     val = val | 0xffffff00;
   }
@@ -117,15 +117,15 @@ void execute_sb() {
   uint32_t temp_existing;
   if ((int32_t)(itemp) < 0) {
     temp_existing =
-        mem_read_32(addr + (itemp - 3) / 4) & ~(0xff << (itemp % 4));
+        mem_read_32(addr + (itemp - 31) / 32) & ~(0xff << (itemp % 32));
     mem_write_32(
-        addr + (itemp - 3) / 4,
-        (CURRENT_STATE.REGS[rt] & (0xff << (itemp % 4))) | temp_existing);
+        addr + (itemp - 31) / 32,
+        (CURRENT_STATE.REGS[rt] & (0xff << (itemp % 32))) | temp_existing);
   } else {
-    temp_existing = mem_read_32(addr + itemp / 4) & ~(0xff << (itemp % 4));
+    temp_existing = mem_read_32(addr + itemp / 32) & ~(0xff << (itemp % 32));
     mem_write_32(
-        addr + itemp / 4,
-        (CURRENT_STATE.REGS[rt] & (0xff << (itemp % 4))) | temp_existing);
+        addr + itemp / 32,
+        (CURRENT_STATE.REGS[rt] & (0xff << (itemp % 32))) | temp_existing);
   }
   // AND value in register with ff will chop off the most signficant 24 bits
   // (keeping only the last 8) ORRing the two will keep the first bits from
