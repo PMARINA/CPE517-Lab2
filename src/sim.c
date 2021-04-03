@@ -113,6 +113,7 @@ void execute_sb() {
   // read in first 24 bits from memory (chopping off the rest)
   if (itemp > 32767) {
     itemp = ~itemp + 1;
+    printf("itemp is %d \n", itemp);
   }
   uint32_t val;
   uint32_t temp_existing;
