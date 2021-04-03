@@ -116,9 +116,9 @@ void execute_sb() {
   if (itemp > 32767) {
     itemp = ~itemp + 1;
     printf("itemp is %d \n", itemp);
-    temp_existing =
-        mem_read_32(addr - (itemp + 3) / 4) & ~(0xff << ((itemp % 4) * 8));
-    mem_write_32(addr - (itemp + 3) / 4,
+    temp_existing = mem_read_32(addr - ((itemp + 3) / 4) * 4) &
+                    ~(0xff << ((itemp % 4) * 8));
+    mem_write_32(addr - ((itemp + 3) / 4) * 4,
                  (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4) * 8))) |
                      temp_existing);
   } else {
