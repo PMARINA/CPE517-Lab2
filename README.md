@@ -19,7 +19,7 @@
 
 ### Install Pre-Requisite Libraries
 
-`pip3 install python-magic loguru`
+`pip3 install --upgrade python-magic loguru`
 
 Change to `pip` if `pip3` not installed and `pip` corresponds to `python3`.
 
