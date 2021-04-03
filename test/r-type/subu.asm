@@ -1,14 +1,22 @@
-.data
-val: 0xfdfcfbfa
 .text
-lw $t0, val
-addi $t0, $t0, 1
-sw $t0, val
-addi $a0, $zero, 0
-lw $a0, val
-addi $v0, $zero, 1
-syscall
-addi $v0, $zero, 10
-syscall
+load:
+	addi $v0, $zero, 1
+	addi $t0, $zero, 2
+	addi $t1, $zero, 5
+	addi $t2, $zero, -1 #65534
+	addi $t3, $zero, -10 #65525
+compute:
+	subu $a0, $t1, $t0
+	syscall
+	subu $a0, $t0, $t1
+	syscall
+	subu $a0, $t2, $t1
+	syscall
+	subu $a0, $t2, $t3
+	syscall
 
-# This is a copy of lbsb with w instead of b...
+# Expected outputs:
+# 3
+# 65532
+# 65529
+# 9
