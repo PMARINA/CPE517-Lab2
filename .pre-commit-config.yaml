@@ -17,6 +17,7 @@ repos:
     rev: v1.1.1
     hooks:
       - id: clang-format
+        args: [-i]
 -   repo: https://github.com/executablebooks/mdformat
     rev: 0.6.4
     hooks:
