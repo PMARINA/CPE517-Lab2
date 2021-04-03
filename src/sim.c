@@ -92,7 +92,7 @@ void execute_lb() {
   if ((int32_t)(itemp) < 0)
     val = (mem_read_32(addr + (itemp - 3) / 4) & (0xff << ((itemp % 4) * 8)));
   else
-    val = (mem_read_32(addr + itemp / 4) & (0xff << ((itemp % 4) * 8)));
+    val = (mem_read_32(addr + itemp / 4) >> ((itemp % 4) * 8) & 0xff);
   if (val > 127) {
     val = val | 0xffffff00;
   }
