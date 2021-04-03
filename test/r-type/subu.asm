@@ -14,9 +14,11 @@ compute:
 	syscall
 	subu $a0, $t2, $t3
 	syscall
+	addi $v0, $zero, 10
+	syscall
 
 # Expected outputs:
 # 3
-# 65532
-# 65529
+# -3
+# -6
 # 9

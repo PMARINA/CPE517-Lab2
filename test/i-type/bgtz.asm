@@ -16,7 +16,7 @@ syscall
 # If it fails,
 # 2
 
-addi $t0, $zero, $zero
+add $t0, $zero, $zero
 bgtz $t0, skipadd1
 addi $t0, $t0, 1
 

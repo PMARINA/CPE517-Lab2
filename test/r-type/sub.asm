@@ -15,8 +15,11 @@ compute:
 	sub $a0, $t2, $t3
 	syscall
 
+	addi $v0, $zero, 10
+	syscall
+
 # Expected outputs:
 # 3
 # -3
 # 6
-# -11
+# 9

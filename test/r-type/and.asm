@@ -3,7 +3,6 @@ load:
 	addi $t0, $zero, 0x11111111
 	addi $t1, $zero, 0x00000000
 	addi $t2, $zero, 0x11110000
-	addi $t3, $zero, 1
 
 compute:
 	addi $v0, $zero, 1
@@ -12,8 +11,6 @@ compute:
 	and $a0, $t0, $t2
 	syscall
 	and $a0, $t1, $t1
-	syscall
-	and $a0, $t0, $t3
 	syscall
 
 
@@ -24,4 +21,3 @@ syscall
 # 0
 # 286326784
 # 0
-# 1
