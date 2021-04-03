@@ -88,7 +88,7 @@ void execute_lb() {
   if (itemp > 32767) {
     itemp = ~itemp + 1;
     val = (mem_read_32(addr - ((itemp + 3) / 4) * 4) &
-           (0xff << ((itemp % 4 - 1) * 8)));
+           (32 - (0xff << ((itemp % 4 - 1) * 8))));
   } else
     val = (mem_read_32(addr + (itemp / 4) * 4) >> ((itemp % 4) * 8) & 0xff);
   if (val > 127) {
@@ -116,10 +116,11 @@ void execute_sb() {
     itemp = ~itemp + 1;
     printf("itemp is %d \n", itemp);
     temp_existing = mem_read_32(addr - ((itemp + 3) / 4) * 4) &
-                    (~(0xff << ((itemp % 4 - 1) * 8)));
-    mem_write_32(addr - ((itemp + 3) / 4) * 4,
-                 (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4 - 1) * 8))) |
-                     temp_existing);
+                    (~(0xff << (32 - ((itemp % 4 - 1) * 8))));
+    mem_write_32(
+        addr - ((itemp + 3) / 4) * 4,
+        (((CURRENT_STATE.REGS[rt] & 0xff) << (32 - ((itemp % 4 - 1) * 8)))) |
+            temp_existing);
   } else {
     temp_existing =
         mem_read_32(addr + (itemp / 4) * 4) & ~(0xff << ((itemp % 4) * 8));
