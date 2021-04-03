@@ -17,6 +17,14 @@
 
 ## Instructions to Run
 
+### Install Pre-Requisite Libraries
+
+`pip3 install python-magic loguru`
+
+Change to `pip` if `pip3` not installed and `pip` corresponds to `python3`.
+
+### Compile
+
 1. Run `make`
 2. Run `build/sim build/test/*/___.txt`
    - `build/test/*/___.txt` is the test file you wish to run.
