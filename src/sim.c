@@ -111,15 +111,13 @@ void execute_sb() {
   // 32 bit registers
   // replace last 8 bits
   // read in first 24 bits from memory (chopping off the rest)
+  uint32_t val;
+  uint32_t temp_existing;
   if (itemp > 32767) {
     itemp = ~itemp + 1;
     printf("itemp is %d \n", itemp);
-  }
-  uint32_t val;
-  uint32_t temp_existing;
-  if ((int16_t)(itemp) < 0) {
     temp_existing =
-        mem_read_32(addr + (itemp - 3) / 4) & ~(0xff << ((itemp % 4) * 8));
+        mem_read_32(addr - (itemp - 3) / 4) & ~(0xff << ((itemp % 4) * 8));
     mem_write_32(addr + (itemp - 3) / 4,
                  (((CURRENT_STATE.REGS[rt] & 0xff) << ((itemp % 4) * 8))) |
                      temp_existing);
