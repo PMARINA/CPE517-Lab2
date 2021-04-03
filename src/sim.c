@@ -83,6 +83,7 @@ void execute_bgtz() {
 
 void execute_lb() {
   printf("lb\n");
+  printf("itemp is %d \n", itemp);
   uint32_t addr = CURRENT_STATE.REGS[rs];
   uint32_t val;
   if (itemp > 32767) {
@@ -115,7 +116,6 @@ void execute_sb() {
   }
   uint32_t val;
   uint32_t temp_existing;
-  printf("itemp is %d \n", itemp);
   if ((int32_t)(itemp) < 0) {
     temp_existing =
         mem_read_32(addr + (itemp - 3) / 4) & ~(0xff << ((itemp % 4) * 8));
