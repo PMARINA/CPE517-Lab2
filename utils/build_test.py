@@ -42,8 +42,10 @@ def setup_output(out: str = OUTPUT_DIRECTORY) -> None:
         out (str, optional): The filepath to the directory. Defaults to OUTPUT_DIRECTORY.
     """
     if os.path.exists(out):
-        shutil.rmtree(out)
-    os.makedirs(out)
+        # shutil.rmtree(out)
+        pass
+    else:
+        os.makedirs(out)
 
 
 def mips_compile(input_file: str, output_file: str) -> bool:
