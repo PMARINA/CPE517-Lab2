@@ -38,3 +38,13 @@ test3:
 	addi $a0, $a0, 0
 	lw $a0, -8($t5)
 	syscall
+
+# Expected outputs
+# You should see 3 hex numbers printed among the various state-prints
+#
+# Also in memory...
+# mdump 0x10010000 0x1001001c
+# All others except specified should be 0
+# 0x10010000: (0xABCD1234)
+# 0x10010010: (0xABCD1234)
+# 0x1001001c: (0xABCD1234)

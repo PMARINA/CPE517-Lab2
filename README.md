@@ -42,6 +42,8 @@ See [this repository's github.io page](https://pmarina.github.io/CPE517-Lab2/) f
 
 ## Fully Tested Instructions
 
+We only count instructions as fully tested when all variations of the instructions have been tested and their side-effects either match MARS or the expected spec (ie 32 bit numbers are not used in imm).
+
 ### I-Type
 
 - `BGTZ` = Branch if Greater than Zero
@@ -51,3 +53,7 @@ See [this repository's github.io page](https://pmarina.github.io/CPE517-Lab2/) f
   - See `SB`
 - `SB` = Store Byte
   - [test](test/i-type/lbsb.asm)
+- `LW` = Load Word
+  - See `SW`
+- `SW` = Store Word
+  - [test](test/i-type/lwsw.asm)
