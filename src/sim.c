@@ -117,7 +117,7 @@ void execute_sb() {
   // }
   uint32_t val;
   uint32_t temp_existing;
-  if ((int32_t)(itemp) < 0) {
+  if ((int16_t)(itemp) < 0) {
     temp_existing =
         mem_read_32(addr + (itemp - 3) / 4) & ~(0xff << ((itemp % 4) * 8));
     mem_write_32(addr + (itemp - 3) / 4,
