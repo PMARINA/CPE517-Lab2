@@ -10,7 +10,9 @@ The lab was completed for [CPE 517 (Course Page)](https://personal.stevens.edu/~
 
 This lab was assigned by our course instructor, [Professor Hang Liu](mailto:Hang.Liu@stevens.edu) and our TA [Mingju He](mailto:mhe6@stevens.edu). All files in the [docs/](https://github.com/PMARINA/CPE517-Lab2/tree/main/docs) directory were provided, as well as [src/Lab2example.c](https://github.com/PMARINA/CPE517-Lab2/blob/main/src/Lab2example.c), [src/shell.c](https://github.com/PMARINA/CPE517-Lab2/blob/main/src/shell.c), [src/shell.h](https://github.com/PMARINA/CPE517-Lab2/blob/main/src/shell.h), and a fair portion of [src/sim.c](https://github.com/PMARINA/CPE517-Lab2/blob/main/src/sim.c). 
 
-The lab was completed by [Julia Chung](https://github.com/chungiee) and [Pridhvi Myneni](https://github.com/PMARINA).
+The lab was completed by [Julia Chung](https://github.com/chungiee) and [Pridhvi Myneni](https://github.com/PMARINA), whose contributions can be found extensively in the [test/](https://github.com/PMARINA/CPE517-Lab2/tree/main/test) and [utils](https://github.com/PMARINA/CPE517-Lab2/tree/main/utils) directories, as well as in [src/sim.c](https://github.com/PMARINA/CPE517-Lab2/blob/main/src/sim.c).
+
+The [utils/Mars4_5.jar](https://github.com/PMARINA/CPE517-Lab2/blob/main/utils/Mars4_5.jar) was downloaded from the official [MARS Page](http://courses.missouristate.edu/kenvollmar/mars/), and all credit for this file and other MARS-related content belongs to them.
 
 ## Explanation of Task
 
