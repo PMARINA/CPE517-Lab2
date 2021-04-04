@@ -18,9 +18,12 @@ The [utils/Mars4_5.jar](https://github.com/PMARINA/CPE517-Lab2/blob/main/utils/M
 
 The [reference material](https://inst.eecs.berkeley.edu/~cs61c/resources/MIPS_Green_Sheet.pdf) provides all details required for implementation of most instructions; however, it might be helpful to use a tool such as [utils/decode_instructions.py](https://github.com/PMARINA/CPE517-Lab2/blob/main/utils/decode_instruction.py) to help you understand the various arguments and values encoded into the instructions. I also heavily recommend compiling various versions of instructions in [MARS](http://courses.missouristate.edu/kenvollmar/mars/) and running them to identify three important things (as applicable) about each instruction:
 
-1) How is the IMM value used (especially for branching and jumping instructions). Does it need to be sign extended? How does the sign extension happen with a < 32 bit number?
-2) How is the destination register treated (especially when a < 32 bit value is being assigned to the register)?
-3) Which memory address is being modified? Are the high or low bits being modified?
+<ol>
+  <li> How is the IMM value used (especially for branching and jumping instructions).</li>
+    <ul><li>Does it need to be sign extended? How does the sign extension happen with a < 32 bit number?</li></ul>
+  <li> How is the destination register treated (especially when a < 32 bit value is being assigned to the register)?</li>
+  <li> Which memory address is being modified? Are the high or low bits being modified?</li>
+</ol>
 
 Make sure you test every instruction with every option available. This would include jumping, branching, and jumping and linking with offsets, and negative values for add, addu, etc.
 
