@@ -26,11 +26,11 @@ compute:
 
 # Expected outputs
 # 8
-# 65538
+# 2
 # 65538
 
 # 2
-# 65532
+# -4
 # 65532
 
 # NOTE: MARS, as of this moment, uses an addiu that is capable of holding immediate values larger than the 2^16 capable of being represented in a single instruction, per the reference guides.

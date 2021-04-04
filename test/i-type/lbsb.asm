@@ -71,5 +71,7 @@ syscall
 
 # Expected output
 # -5
+# 1
+# -5
 # 4
 # 3

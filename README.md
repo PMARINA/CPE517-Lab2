@@ -48,6 +48,8 @@ We only count instructions as fully tested when all variations of the instructio
 
 - `ADDI` = Add Immediate
   - [test](test/i-type/addi.asm)
+- `ADDIU` = Add Immediate Unsigned (equivalent `ADDI`)
+  - [test](test/i-type/addiu.asm)
 - `BGTZ` = Branch if Greater than Zero
   - [test 1](test/i-type/bgtz.asm)
   - [test 2](test/i-type/bgtz2.asm)

@@ -1,9 +1,9 @@
 """A useful tool to help understand the encoding of instructions. Will decode instructions and print out the various values in the instruction."""
 OPCODE_STRING = "opcode".ljust(10)
 FUNC_STRING = "funct".ljust(10)
-RS_STRING = "rs_binary_rep".ljust(10)
-RT_STRING = "rt_binary_rep".ljust(10)
-RD_STRING = "rd_binary_rep".ljust(10)
+RS_STRING = "rs".ljust(10)
+RT_STRING = "rt".ljust(10)
+RD_STRING = "rd".ljust(10)
 JUMP_ADDR_STRING = "jump addr".ljust(10)
 IMM_STRING = "imm".ljust(10)
 
@@ -79,7 +79,7 @@ def instruction_decode(input_binary_string: str) -> None:
                     imm_complement += "1"
                 else:
                     imm_complement += "0"
-            print(f"{IMM_STRING}{hex_format_imm}\t{-int(imm_complement, 2)}")
+            print(f"{IMM_STRING}{hex_format_imm}\t{-int(imm_complement, 2)-1}")
         else:
             print(f"{IMM_STRING}{hex_format_imm}\t{int(imm, 2)}")
 
