@@ -46,6 +46,8 @@ We only count instructions as fully tested when all variations of the instructio
 
 ### I-Type
 
+- `ADDI` = Add Immediate
+  - [test](test/i-type/addi.asm)
 - `BGTZ` = Branch if Greater than Zero
   - [test 1](test/i-type/bgtz.asm)
   - [test 2](test/i-type/bgtz2.asm)
