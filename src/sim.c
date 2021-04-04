@@ -22,7 +22,7 @@ uint16_t itemp; // for save immidiate number
 //  https://web.cse.ohio-state.edu/~crawfis.3/cse675-02/Slides/MIPS%20Instruction%20Set.pdf
 
 void fetch() {
-  // printf("fetch ");
+  printf("fetch ");
   instruction = mem_read_32(CURRENT_STATE.PC); // the instruction
   if (instruction == 0) {
     // Either there is no instruction that is entirely 0 or we are not required
@@ -34,9 +34,9 @@ void fetch() {
 }
 
 void decode() {
-  // printf("decode ");
+  printf("decode ");
   op = instruction >> 26; // find the 31-26 bit
-  // printf("the op: %x ", op);
+  printf("the op: %x ", op);
   if (op == 0) { // R type instructions
     func = instruction & 0x3f;
     rs = (instruction >> 21) & 0x1f;
@@ -59,7 +59,7 @@ void decode() {
 }
 
 void execute_addi() {
-  // printf("addi\n");
+  printf("addi\n");
   if (itemp > 32767) {               // 2^15-1=32767 is the largest number
     itemp = ((~itemp) & 0xffff) + 1; // 2's complement
     // Taking 2's complement allows you to "negate" a number, thus we take the
@@ -76,7 +76,7 @@ void execute_addiu() {
   // Per discussion on slack, addi is equivalent to addiu, except the CPU state
   // flags might be changed, depending on the specific implementation of the
   // MIPS instruction set.
-  // printf("addiu\n");
+  printf("addiu\n");
   if (itemp > 32767) {
     NEXT_STATE.REGS[rt] = CURRENT_STATE.REGS[rs] - (((~itemp) & 0xffff) + 1);
   } else {
@@ -85,7 +85,7 @@ void execute_addiu() {
 }
 
 void execute_bgtz() {
-  // printf("bgtz\n");
+  printf("bgtz\n");
   if (CURRENT_STATE.REGS[rs] > 0) {
     // 0x1d20fffd
     // i type, opcode = 7
@@ -103,7 +103,7 @@ void execute_bgtz() {
 }
 
 void execute_lb() {
-  // printf("lb\n");
+  printf("lb\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
   uint32_t val;
   if (itemp > 32767) {
@@ -120,7 +120,7 @@ void execute_lb() {
 }
 
 void execute_lw() {
-  // printf("lw\n");
+  printf("lw\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
   if (itemp > 32767) {
     itemp = ((~itemp) & 0xffff) + 1;
@@ -131,8 +131,7 @@ void execute_lw() {
 }
 
 void execute_sb() {
-  // printf("sb\n");
-  // printf("itemp is %d \n", itemp);
+  printf("sb\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
   // 32 bit registers
   // replace last 8 bits
@@ -141,7 +140,6 @@ void execute_sb() {
   uint32_t temp_existing;
   if (itemp > 32767) {
     itemp = ((~itemp) & 0xffff) + 1;
-    // printf("itemp is %d \n", itemp);
     temp_existing = mem_read_32(addr - ((itemp + 3) / 4) * 4) &
                     (~(0xff << (24 - ((itemp % 4 - 1) * 8))));
     mem_write_32(
@@ -161,7 +159,7 @@ void execute_sb() {
 }
 
 void execute_sw() {
-  // printf("sw\n");
+  printf("sw\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
   if (itemp > 32767) {
     itemp = ((~itemp) & 0xffff) + 1;
@@ -172,7 +170,7 @@ void execute_sw() {
 }
 
 void execute_jump() {
-  // printf("jump\n");
+  printf("jump\n");
   // Per the manual, we use the high 4 bits of the pc
   // and the low 26 bits from the instruction, but shift that left 2 so that the
   // lsb won't result in a badly aligned address.
@@ -184,7 +182,7 @@ void execute_jump() {
 }
 
 void execute_jal() {
-  // printf("jal\n");
+  printf("jal\n");
   // Jump and Link
   uint32_t addr = ((instruction & 0x3ffffff) << 2);
   // We do decoding here to get the address to jump to
@@ -198,7 +196,7 @@ void execute_jal() {
 }
 
 void execute_jr() {
-  // printf("jr\n");
+  printf("jr\n");
   // Set the PC to the value provided.
   NEXT_STATE.PC = CURRENT_STATE.REGS[rs];
   // No other action taken.
@@ -213,21 +211,21 @@ void execute_lui() {
   //        __ ___ = 0                                RS
   //              _ ____ = 1                          RT
   //                     ____ ____ ____ ____ = 4097   IMM (itemp)
-  // printf("lui\n");
+  printf("lui\n");
   // Set the upper bits to whatever is specified. Lower bits are always cleared
   // out.
   NEXT_STATE.REGS[rt] = itemp << 16;
 }
 
 void execute_ori() {
-  // printf("ori\n");
+  printf("ori\n");
   NEXT_STATE.REGS[rt] = CURRENT_STATE.REGS[rs] | itemp;
 }
 
 void execute() {
-  // printf("\nexecute\t");
+  printf("\nexecute\t");
   if (op == 0) { // R type instruction
-    // printf("R-type\t");
+    printf("R-type\t");
     switch (func) {
     case 8:
       // JR = 8 == return
@@ -235,30 +233,28 @@ void execute() {
       break;
     case 32: // add:100000
       // ADD = 32
-      // printf("add\n");
+      printf("add\n");
       //      if(rt>2147483647)
       NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] + CURRENT_STATE.REGS[rt];
       break;
     case 33:
       // ADDU = 33
-      // printf("addu\n");
-      NEXT_STATE.REGS[rd] = (uint32_t)(CURRENT_STATE.REGS[rs]) +
-                            (uint32_t)(CURRENT_STATE.REGS[rt]);
+      printf("addu\n");
+      NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] + CURRENT_STATE.REGS[rt];
       break;
     case 34:
       // SUB = 34
-      // printf("sub\n");
+      printf("sub\n");
       NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] - CURRENT_STATE.REGS[rt];
       break;
     case 35:
       // SUBU = 35
-      // printf("subu\n");
-      NEXT_STATE.REGS[rd] = (uint32_t)(CURRENT_STATE.REGS[rs]) -
-                            (uint32_t)(CURRENT_STATE.REGS[rt]);
+      printf("subu\n");
+      NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] - CURRENT_STATE.REGS[rt];
       break;
     case 36:
       // AND = 36
-      // printf("and\n");
+      printf("and\n");
       NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] & CURRENT_STATE.REGS[rt];
       break;
     case 12:                             // system call:001100
@@ -280,7 +276,7 @@ void execute() {
     }
   } else {
     if (op == 2 || op == 3) {
-      // printf("J-type\t");
+      printf("J-type\t");
       // Execute Jumps
       switch (op) {
       case 2:
@@ -293,7 +289,7 @@ void execute() {
         break;
       }
     } else {
-      // printf("I-type\t");
+      printf("I-type\t");
       // Execute I-type
       switch (op) {
       case 7:

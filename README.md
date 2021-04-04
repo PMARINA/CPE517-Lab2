@@ -68,3 +68,16 @@ We only count instructions as fully tested when all variations of the instructio
   - [test](test/j-type/j.asm)
 - `JAL` = Jump and Link
   - [test](test/j-type/jal.asm)
+
+### R-Type
+
+- `ADD` = Add
+  - [test](test/r-type/add.asm)
+- `ADDU` = Add (equivalent `ADD`)
+  - [test](test/r-type/addu.asm)
+- `AND` = Bit-wise And Operation (`&`)
+  - [test](test/r-type/and.asm)
+- `SUB` = Subtract
+  - [test](test/r-type/sub.asm)
+- `SUBU` = Subtract Unsigned (equivalent `SUB`)
+  - [test](test/r-type/subu.asm)

@@ -17,6 +17,6 @@ compute:
 
 # Expected outputs:
 # 3
-# 65532
-# 65529
+# -3
+# -6
 # 9
