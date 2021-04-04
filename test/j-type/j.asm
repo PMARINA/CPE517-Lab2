@@ -2,8 +2,11 @@
 addi	$t0, $zero, 4
 addi	$t1, $zero, 5
 j		perimeter
+skip:
 addi	$a0, $zero, 0
 addi	$v0, $zero, 1	#returning integer
+syscall
+addi $v0, $v0, 9
 syscall
 
 perimeter:
@@ -13,10 +16,9 @@ add		$a0, $t2, $t3
 
 addi	$v0, $zero, 1	#returning integer
 syscall
-addi	$v0, $zero, 10	#exit
-syscall
+j skip
 
 # Expected outcome:
-# 18
+# 180
 # if fail:
-# 018
+# 018, etc.

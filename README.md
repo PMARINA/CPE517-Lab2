@@ -57,3 +57,8 @@ We only count instructions as fully tested when all variations of the instructio
   - See `SW`
 - `SW` = Store Word
   - [test](test/i-type/lwsw.asm)
+
+### J-Type
+
+- `J` = Jump
+  - [test](test/j-type/j.asm)

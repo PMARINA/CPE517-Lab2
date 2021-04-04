@@ -44,8 +44,9 @@ void decode() {
     rd = (instruction >> 11) & 0x1f;
   } else {                    // if i != 0, I-type, J-type
     if (op == 2 || op == 3) { // J-type
-      // The op is a Jump or JAL operation
-      // Nothing to do if it's a jump (we don't have an address global variable)
+                              // The op is a Jump or JAL operation
+                              // Nothing to do if it's a jump (we don't have an
+                              // address global variable)
     } else {
       // Any jump instructions not supported (all besides J, JAL) will be
       // misclassified as I type
@@ -72,9 +73,15 @@ void execute_addi() {
 
 void execute_addiu() {
   // Add immediate unsigned
+  // Per discussion on slack, addi is equivalent to addiu, except the CPU state
+  // flags might be changed, depending on the specific implementation of the
+  // MIPS instruction set.
   printf("addiu\n");
-  NEXT_STATE.REGS[rt] =
-      ((uint32_t)(CURRENT_STATE.REGS[rs])) + ((uint32_t)(itemp));
+  if (itemp > 32767) {
+    NEXT_STATE.REGS[rt] = CURRENT_STATE.REGS[rs] - (~itemp + 1);
+  } else {
+    NEXT_STATE.REGS[rt] = CURRENT_STATE.REGS[rs] + itemp;
+  }
 }
 
 void execute_bgtz() {
@@ -253,15 +260,14 @@ void execute() {
       if (CURRENT_STATE.REGS[2] == 10) { // v0==10 then exit
         printf("systemcall: exit\n");
         RUN_BIT = FALSE;
-      }
-      else if (CURRENT_STATE.REGS[2] == 1) {      // v0==1: print int
-        int32_t val = CURRENT_STATE.REGS[4]; // a0 is 4th register
+      } else if (CURRENT_STATE.REGS[2] == 1) { // v0==1: print int
+        int32_t val = CURRENT_STATE.REGS[4];   // a0 is 4th register
         printf("\n print the number:   %d \n ", val);
-      }
-      else if(CURRENT_STATE.REGS[2] == 34){
+      } else if (CURRENT_STATE.REGS[2] == 34) {
         printf("\n print the number: %x \n", CURRENT_STATE.REGS[4]);
       } else {
-        printf("\n syscall with unsupported parameter %d \n", CURRENT_STATE.REGS[2]);
+        printf("\n syscall with unsupported parameter %d \n",
+               CURRENT_STATE.REGS[2]);
       }
       break;
     default:
