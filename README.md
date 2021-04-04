@@ -62,3 +62,5 @@ We only count instructions as fully tested when all variations of the instructio
 
 - `J` = Jump
   - [test](test/j-type/j.asm)
+- `JAL` = Jump and Link
+  - [test](test/j-type/jal.asm)
