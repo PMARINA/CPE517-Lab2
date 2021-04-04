@@ -1,6 +1,6 @@
 # CPE517-Lab2
 
-[CPE 517-A: Spring 2020](https://personal.stevens.edu/~hliu77/teaching.html)
+[CPE 517-A: Spring 2021](https://personal.stevens.edu/~hliu77/teaching.html)
 
 ## Contributors
 
