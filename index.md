@@ -20,7 +20,9 @@ The [reference material](https://inst.eecs.berkeley.edu/~cs61c/resources/MIPS_Gr
 
 1) How is the IMM value used (especially for branching and jumping instructions)
    - Does it need to be sign extended? How does the sign extension happen with a < 32 bit number?
+
 2) How is the destination register treated (especially when a < 32 bit value is being assigned to the register)?
+
 3) Which memory address is being modified? Are the high or low bits being modified?
 
 Make sure you test every instruction with every option available. This would include jumping, branching, and jumping and linking with offsets, and negative values for add, addu, etc.
