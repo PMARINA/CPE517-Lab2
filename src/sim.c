@@ -16,7 +16,7 @@ uint8_t rs, rt, rd; // We only save the register number because it's confusing
 uint8_t func;
 uint16_t itemp; // for save immidiate number
 
-// please take a loot at
+// please take a look at
 // https://inst.eecs.berkeley.edu/~cs61c/resources/MIPS_Green_Sheet.pdf
 // or
 //  https://web.cse.ohio-state.edu/~crawfis.3/cse675-02/Slides/MIPS%20Instruction%20Set.pdf
@@ -86,6 +86,7 @@ void execute_addiu() {
 
 void execute_bgtz() {
   printf("bgtz\n");
+  // Branch if Greater Than Zero (bgtz) branchs to a label if the condition of gtz is met
   if (CURRENT_STATE.REGS[rs] > 0) {
     // 0x1d20fffd
     // i type, opcode = 7
@@ -103,16 +104,24 @@ void execute_bgtz() {
 }
 
 void execute_lb() {
+  // Load Byte (lb) loads 8 bits onto the reg rt
   printf("lb\n");
   uint32_t addr = CURRENT_STATE.REGS[rs];
   uint32_t val;
   if (itemp > 32767) {
     itemp = ((~itemp) & 0xffff) + 1;
+    // Must be double word aligned,
+    // so in order to figure out correct multiple of 4, 
+    // divide by 4 (which drops the decimals)
+    // multiply by 4 to get correct doubleword.
+    // Right shift that memory read by... 
+    // mod itemp by 4 to get the correct byte we want to read in
+    // multiply by 8 to get number of bits because bit shift operation is in bits
     val = (mem_read_32(addr - (itemp + 3) / 4 * 4) >>
-           ((4 - (itemp % 4)) % 4) * 8) &
-          0xff;
+           ((4 - (itemp % 4)) % 4) * 8) & 
+          0xff; 
   } else
-    val = (mem_read_32(addr + (itemp / 4) * 4) >> ((itemp % 4) * 8) & 0xff);
+    val = (mem_read_32(addr + (itemp / 4) * 4) >> ((itemp % 4) * 8) & 0xff); 
   if (val > 127) {
     val = val | 0xffffff00;
   }
@@ -121,21 +130,24 @@ void execute_lb() {
 
 void execute_lw() {
   printf("lw\n");
+  // Load Word (lw) loads 32 bits onto the reg rt
   uint32_t addr = CURRENT_STATE.REGS[rs];
-  if (itemp > 32767) {
+  if (itemp > 32767) { // if itemp is greater than 15 bits, negate itemp AND with 0xffff
     itemp = ((~itemp) & 0xffff) + 1;
     NEXT_STATE.REGS[rt] = mem_read_32(addr - itemp);
-  } else {
+  } else { // else perform normal lw by incrementing addr (rs) by itemp and load onto reg rt
     NEXT_STATE.REGS[rt] = mem_read_32(addr + itemp);
   }
 }
 
 void execute_sb() {
   printf("sb\n");
+  // Store Byte (sb) stores the last 8 bits of the memory addr of reg rs into reg rt
   uint32_t addr = CURRENT_STATE.REGS[rs];
   // 32 bit registers
   // replace last 8 bits
   // read in first 24 bits from memory (chopping off the rest)
+  // Similar procedure to Load Byte (lb) except the source and dest reg are flipped.
   uint32_t val;
   uint32_t temp_existing;
   if (itemp > 32767) {
@@ -160,11 +172,12 @@ void execute_sb() {
 
 void execute_sw() {
   printf("sw\n");
+  // Store Word (sw) takes the memory addr of rs incremented by the imm and writes it in reg rt
   uint32_t addr = CURRENT_STATE.REGS[rs];
-  if (itemp > 32767) {
+  if (itemp > 32767) { // if itemp is greater than 2^15 bits, negate itemp, AND with 0xffff
     itemp = ((~itemp) & 0xffff) + 1;
     mem_write_32(addr - itemp, CURRENT_STATE.REGS[rt]);
-  } else {
+  } else { // else increment addr (rs) by itemp to write into current state of rt
     mem_write_32(addr + itemp, CURRENT_STATE.REGS[rt]);
   }
 }
@@ -240,11 +253,15 @@ void execute() {
     case 33:
       // ADDU = 33
       printf("addu\n");
+      // Add the contents in register rs and rt 
+      // and store it in the memory addr of next state rd
       NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] + CURRENT_STATE.REGS[rt];
       break;
     case 34:
       // SUB = 34
       printf("sub\n");
+      // Get the current state of reg rs and rt 
+      // and subtract the values to store into next state of reg rd
       NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] - CURRENT_STATE.REGS[rt];
       break;
     case 35:
@@ -255,6 +272,7 @@ void execute() {
     case 36:
       // AND = 36
       printf("and\n");
+      // AND reg rs and rt, for which rd = 1 only when both bits in rs and rt = 1
       NEXT_STATE.REGS[rd] = CURRENT_STATE.REGS[rs] & CURRENT_STATE.REGS[rt];
       break;
     case 12:                             // system call:001100
